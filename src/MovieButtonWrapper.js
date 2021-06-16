@@ -20,40 +20,16 @@ export default function ButtonWrapper(props) {
         let vehicleRequests = props.movie.vehicles.map(req => axios.get(req));
         let specieRequests = props.movie.species.map(req => axios.get(req));
 
-       /*  Logic can be made a lot cleaner with less reusable code but this is functional
-        To display individual pages for each of these would be another component creation and refactored logic to handle data trickling down from App.js to each component
-        Can also be handled with state management*/
-        Promise.all(charRequests)
-            .then(response => {
-                response.forEach(resp => {
-                    setChars(state => [...state, resp.data.name])
-                })
-            }).catch(err => console.error(err))
-        Promise.all(planetRequests)
-            .then(response => {
-                response.forEach(resp => {
-                    setPlanets(state => [...state, resp.data.name])
-                })
-            }).catch(err => console.error(err))
-        Promise.all(starshipRequests)
-            .then(response => {
-                response.forEach(resp => {
-                    setStarships(state => [...state, resp.data.name])
-                })
-            }).catch(err => console.error(err))
-        Promise.all(vehicleRequests)
-            .then(response => {
-                response.forEach(resp => {
-                    setVehicles(state => [...state, resp.data.name])
-                })
-            }).catch(err => console.error(err))
-        Promise.all(specieRequests)
-            .then(response => {
-                response.forEach(resp => {
-                    setSpecies(state => [...state, resp.data.name])
-                })
-            }).catch(err => console.error(err))
-
+        /*  Logic can be made a lot cleaner with less reusable code but this is functional
+         To display individual pages for each of these would be another component creation and refactored logic to handle data trickling down from App.js to each component
+         Can also be handled with state management
+         axios forEach loop is a possibility but runs considerably slower and has state consistency issues
+         */
+        Promise.all(charRequests).then(response => { response.forEach(resp => { setChars(state => [...state, resp.data.name]) }) }).catch(err => console.error(err))
+        Promise.all(planetRequests).then(response => { response.forEach(resp => { setPlanets(state => [...state, resp.data.name]) }) }).catch(err => console.error(err))
+        Promise.all(starshipRequests).then(response => { response.forEach(resp => { setStarships(state => [...state, resp.data.name]) }) }).catch(err => console.error(err))
+        Promise.all(vehicleRequests).then(response => { response.forEach(resp => { setVehicles(state => [...state, resp.data.name]) }) }).catch(err => console.error(err))
+        Promise.all(specieRequests).then(response => { response.forEach(resp => { setSpecies(state => [...state, resp.data.name]) }) }).catch(err => console.error(err))
     }, []);
 
     /* Characters, Planets, Starships, Vehicles, Species can all be expanded into their own categories of pages similar to MovieButtonWrapper but trickling down another level
@@ -61,7 +37,9 @@ export default function ButtonWrapper(props) {
     then indidivually render their own detail pages as required.
 
     Performace: setState can be called less, api call numbers depends on client side performance - balancing upfront vs as needed calls - doing calls in parallel etc.
+   
     Error checking: Promise.all fails if a single call fails, can be addressed to do all calls anyway and address errors individually. In this use case its a bit strange though if the api fails.
+    
     Need default rendering in case calls fail at the App.js level so app does not crash, and error pages on every level below as well.
      */
     return (
