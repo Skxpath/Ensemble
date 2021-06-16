@@ -28,34 +28,42 @@ export default function ButtonWrapper(props) {
                 response.forEach(resp => {
                     setChars(state => [...state, resp.data.name])
                 })
-            })
+            }).catch(err => console.error(err))
         Promise.all(planetRequests)
             .then(response => {
                 response.forEach(resp => {
                     setPlanets(state => [...state, resp.data.name])
                 })
-            })
+            }).catch(err => console.error(err))
         Promise.all(starshipRequests)
             .then(response => {
                 response.forEach(resp => {
                     setStarships(state => [...state, resp.data.name])
                 })
-            })
+            }).catch(err => console.error(err))
         Promise.all(vehicleRequests)
             .then(response => {
                 response.forEach(resp => {
                     setVehicles(state => [...state, resp.data.name])
                 })
-            })
+            }).catch(err => console.error(err))
         Promise.all(specieRequests)
             .then(response => {
                 response.forEach(resp => {
                     setSpecies(state => [...state, resp.data.name])
                 })
-            })
+            }).catch(err => console.error(err))
+
     }, []);
 
-    //Characters, Planets, Starships, Vehicles, Species can all be expanded into their own categories of pages similar to MovieButtonWrapper but trickling down another level
+    /* Characters, Planets, Starships, Vehicles, Species can all be expanded into their own categories of pages similar to MovieButtonWrapper but trickling down another level
+    At the moment, the promises all push an array of name strings to state - can push an array of objects instead which is passed into Character, Planet, etc components which
+    then indidivually render their own detail pages as required.
+
+    Performace: setState can be called less, api call numbers depends on client side performance - balancing upfront vs as needed calls - doing calls in parallel etc.
+    Error checking: Promise.all fails if a single call fails, can be addressed to do all calls anyway and address errors individually. In this use case its a bit strange though if the api fails.
+    Need default rendering in case calls fail at the App.js level so app does not crash, and error pages on every level below as well.
+     */
     return (
         <>
             <Button variant="light" onClick={handleShow}>{props.movie.title}</Button>
