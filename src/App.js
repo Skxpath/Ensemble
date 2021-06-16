@@ -1,41 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
-import ButtonWrapper from './ButtonWrapper';
+import ButtonWrapper from './MovieButtonWrapper';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movieData: []
-    };
-  }
+export default function App() {
 
-  componentDidMount() {
+  const [movieData, setMovieData] = useState({});
+
+/*   API requests movie data and trickles the json down to each individual button wrapper
+  Button wrappers contain all the required information to populate every other necessary component top down
+  Can be done cleaner with stores */
+  useEffect(() => {
     axios.get('https://swapi.dev/api/films/').then(res => {
-      this.setState({
-        movieData: res.data.results,
-      })
+      setMovieData(res.data.results);
     }).catch(err => {
       console.error(err);
     })
-  }
+  }, []);
 
-  render() {
     return (
       <div className="App">
         <header className="App-header">
           {
-            Object.entries(this.state.movieData).map(([key, value]) => {
+            Object.entries(movieData).map(([key, value]) => {
               return (      
-                <ButtonWrapper variant="light" movie={value}/>
+                <ButtonWrapper variant="light" key={key} movie={value}/>
               )
             })
-          }
-         
+          }         
         </header>
       </div>
     )
-  };
 }
 

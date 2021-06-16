@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 
-function ButtonWrapper(props) {
+export default function ButtonWrapper(props) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -14,47 +14,48 @@ function ButtonWrapper(props) {
     const [species, setSpecies] = useState([]);
 
     useEffect(() => {
-        let charRequests = props.movie.characters.map(x => axios.get(x));
-        let planetRequests = props.movie.planets.map(x => axios.get(x));
-        let starshipRequests = props.movie.starships.map(x => axios.get(x));
-        let vehicleRequests = props.movie.vehicles.map(x => axios.get(x));
-        let specieRequests = props.movie.species.map(x => axios.get(x));
+        let charRequests = props.movie.characters.map(req => axios.get(req));
+        let planetRequests = props.movie.planets.map(req => axios.get(req));
+        let starshipRequests = props.movie.starships.map(req => axios.get(req));
+        let vehicleRequests = props.movie.vehicles.map(req => axios.get(req));
+        let specieRequests = props.movie.species.map(req => axios.get(req));
 
-        //Logic can be made a lot cleaner with less reusable code but this is functional
-        //To display individual pages for each of these would be another component creation and refactored logic to handle data trickling down from App.js to each component
-        //Can also be handled with state management but mostly a design problem
+       /*  Logic can be made a lot cleaner with less reusable code but this is functional
+        To display individual pages for each of these would be another component creation and refactored logic to handle data trickling down from App.js to each component
+        Can also be handled with state management*/
         Promise.all(charRequests)
             .then(response => {
-                response.forEach(x => {
-                    setChars(state => [...state, x.data.name])
+                response.forEach(resp => {
+                    setChars(state => [...state, resp.data.name])
                 })
             })
         Promise.all(planetRequests)
             .then(response => {
-                response.forEach(x => {
-                    setPlanets(state => [...state, x.data.name])
+                response.forEach(resp => {
+                    setPlanets(state => [...state, resp.data.name])
                 })
             })
         Promise.all(starshipRequests)
             .then(response => {
-                response.forEach(x => {
-                    setStarships(state => [...state, x.data.name])
+                response.forEach(resp => {
+                    setStarships(state => [...state, resp.data.name])
                 })
             })
         Promise.all(vehicleRequests)
             .then(response => {
-                response.forEach(x => {
-                    setVehicles(state => [...state, x.data.name])
+                response.forEach(resp => {
+                    setVehicles(state => [...state, resp.data.name])
                 })
             })
         Promise.all(specieRequests)
             .then(response => {
-                response.forEach(x => {
-                    setSpecies(state => [...state, x.data.name])
+                response.forEach(resp => {
+                    setSpecies(state => [...state, resp.data.name])
                 })
             })
     }, []);
 
+    //Characters, Planets, Starships, Vehicles, Species can all be expanded into their own categories of pages similar to MovieButtonWrapper but trickling down another level
     return (
         <>
             <Button variant="light" onClick={handleShow}>{props.movie.title}</Button>
@@ -86,7 +87,6 @@ function ButtonWrapper(props) {
         </>
     )
 }
-export default ButtonWrapper
 
 
 
